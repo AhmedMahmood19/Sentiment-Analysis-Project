@@ -18,9 +18,14 @@ int main()
     json t;
     map<string,list<string>>  M;
 
+    //parsing json file into json object
     reviewFile >> t;
    
-    
+    // looping through the json 
+    // placing the title in a temp var then comparing it with the next titles
+    // if title same then the reviewText of that product is placed in the same list
+    // after making a list they are placed in a map with key as the product title and reviewText list as value
+
     for (int i=0;i<t.size()-1;)
     {
         string temp= t[i]["title"];
@@ -33,8 +38,7 @@ int main()
                 l.push_back(t[i]["reviewText"]);
 
             i++;
-            if (i == 2362)
-                cout << "kuch" << endl;
+            
         }
         //M.insert(pair<string, list<string>>(temp, l));
         M[temp] = l;
@@ -42,7 +46,7 @@ int main()
     }
     
   
-
+    // printing map
     for (pair<const string,list<string>>& x: M)
     {
         cout << x.first<<endl;
