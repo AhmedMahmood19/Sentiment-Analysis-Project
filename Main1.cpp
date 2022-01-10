@@ -11,31 +11,36 @@
 using json = nlohmann::json;
 using namespace std;
 
-int main()
+void main1()
 {
     // create a JSON object
     ifstream reviewFile("Files\\Used Files\\kindle_store_reviews.json");
-    json t;
+    json JsonObj;
     map<string,list<string>>  M;
 
     //parsing json file into json object
-    reviewFile >> t;
+    JsonObj = json::parse(reviewFile);
    
     // looping through the json 
     // placing the title in a temp var then comparing it with the next titles
     // if title same then the reviewText of that product is placed in the same list
     // after making a list they are placed in a map with key as the product title and reviewText list as value
 
-    for (int i=0;i<t.size()-1;)
+    for (int i=0;i<JsonObj.size()-1;)
     {
-        string temp= t[i]["title"];
+        string temp= JsonObj[i]["title"];
+        if (JsonObj[i]["title"] == "")
+        {
+            i++;
+            continue;
+        }
         list<string> l;
         
 
-        while (t[i]["title"]==temp)
+        while (JsonObj[i]["title"]==temp)
         {
-            if(!t[i]["reviewText"].is_null())
-                l.push_back(t[i]["reviewText"]);
+            if(!JsonObj[i]["reviewText"].is_null() && JsonObj[i]["title"]!="")
+                l.push_back(JsonObj[i]["reviewText"]);
 
             i++;
             
