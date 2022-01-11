@@ -11,13 +11,82 @@ using namespace std;
 
 void fillmap(string buff, map<string, list<string>>& mapReference);
 
+class Node
+{
+public:
+	string word;
+	int count;
+
+	Node()
+	{
+		word = "";
+		count = 0;
+	}
+
+	Node(string w, int c)
+	{
+		word = w;
+		count = c;
+	}
+};
+
 int main()
 {
 	//A map containing all the reviews: key is the review title, value is a list of review texts (the map object is reviewMap)
 	map<string, list<string>>  reviewMap;
+	map<string, Node> posWords;
+	map<string, Node> negWords;
+	map<string, Node> stopWords;
 
+	map<string, Node>::iterator it;
+
+
+	string myText;
 	//open json file for reading, (the file object is reviewFile)
 	ifstream reviewFile("Files\\Used Files\\kindle_store_reviews.json");
+	//opening other files
+	ifstream posWordsFile("Files\\Used Files\\positive-words-clean.txt");
+	ifstream negWordsFile("Files\\Used Files\\negative-words-clean.txt");
+	ifstream stopWordsFile("Files\\Used Files\\stopwords.txt");
+
+
+	//read file and create a negative word map
+	while (!posWordsFile.eof()) {
+		getline(posWordsFile, myText);
+		Node node;
+		node.word = myText;
+		posWords[myText] = node;
+
+	}
+
+	//read file and create a negative word map
+	while (!negWordsFile.eof()) {
+		getline(negWordsFile, myText);
+		Node node;
+		node.word = myText;
+		negWords[myText] = node;
+
+	}
+
+	while (!stopWordsFile.eof()) {
+		getline(stopWordsFile, myText);
+		Node node;
+		node.word = myText;
+		stopWords[myText] = node;
+
+	}
+
+	it = stopWords.find("the");
+	if (it == stopWords.end())
+		cout << "Not found";
+	else
+		cout << it->second.word;
+	return 0;
+
+
+
+
+	//-------------------------------------------------------
 	
 	//buffer to store string that is read from the file
 	string buffer;
@@ -74,17 +143,18 @@ int main()
 	}
 
 	//printing the map for TESTING
-	for (pair<const string, list<string>>& x : reviewMap)
-	{
-		cout << x.first << endl;
-		for (auto v : x.second)
-		{
-			cout << v << endl;
-		}
-		cout << endl << " --------------------------------------------------------------------------- " << endl;
+	
+	//for (pair<const string, list<string>>& x : reviewMap)
+	//{
+	//	cout << x.first << endl;
+	//	for (auto v : x.second)
+	//	{
+	//		cout << v << endl;
+	//	}
+	//	cout << endl << " --------------------------------------------------------------------------- " << endl;
 
-	}
-	return 0;
+	//}
+	//return 0;
 }
 
 void fillmap(string buff, map<string, list<string>>& mapReference)
