@@ -27,7 +27,7 @@ int main()
 	//maps containing the lexicon of positive and negative words each key is the word, value is the count
 	map<string, int> posWords;
 	map<string, int> negWords;
-	
+
 	//set containing the stopwords
 	set<string> stopWords;
 
@@ -35,7 +35,7 @@ int main()
 	string buffer;
 
 	//open json file for reading, (the file object is reviewFile)
-	ifstream reviewFile("Files\\Used Files\\kindle_store_reviews.json");
+	ifstream reviewFile("Files\\Used Files\\v2.json");
 	if (!reviewFile) {
 		cout << "File doesn't exist\n";
 		return 0;
@@ -181,7 +181,7 @@ void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> 
 {
 	//Creates multimaps of positive and negative words sorted in descending order of count(key)
 	multimap<int, string, greater<int> > topPos, topNeg;
-	int negReviewCount = 0, posReviewCount = 0, reviewScore=0;
+	int negReviewCount = 0, posReviewCount = 0, reviewScore = 0;
 	//iterating through all the reviews in the list
 	for (auto v : reviews.second)
 	{
@@ -254,12 +254,14 @@ int tokenise(string review, map<string, int>& posWords, map<string, int>& negWor
 		if (itr != posWords.end())
 		{
 			score++;
+			itr->second = itr->second++;
 			continue;
 		}
 		itr = negWords.find(word);
 		if (itr != negWords.end())
 		{
 			score--;
+			itr->second = itr->second++;
 			continue;
 		}
 
