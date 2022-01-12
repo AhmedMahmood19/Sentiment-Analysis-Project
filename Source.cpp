@@ -1,5 +1,7 @@
 #include <iostream>
 #include <iomanip>
+#include <sstream>
+#include <string>
 #include "nlohmann/json.hpp"
 #include <fstream>
 #include <map>
@@ -24,7 +26,6 @@ int main()
 	map<string, int> posWords;
 	map<string, int> negWords;
 	set<string> stopWords;
-	map<string, int>::iterator it;
 
 
 	string myText;
@@ -59,19 +60,13 @@ int main()
 
 	}
 
-	//code for searching corpus
-	/*it = stopWords.find("the");
-	if (it == stopWords.end())
-		cout << "Not found";
-	else
-		cout << it->second.word;*/
 
 
 
 
-		//-------------------------------------------------------
+	//-------------------------------------------------------
 
-		//buffer to store string that is read from the file
+	//buffer to store string that is read from the file
 	string buffer;
 	//read the first char '[' and discard it
 	reviewFile.ignore();
@@ -187,14 +182,57 @@ void analyseReview(pair<const string, list<string>>& reviews, map<string, int> p
 	//checking the review pairs are passed correctly or not
 	for (auto v : reviews.second)
 	{
-		cout << v << endl;
+		//cout << v << endl;
 		//tokenise function will be called here
 		int x = tokenise(v, posWords, negWords, stopWords);
+		cout << x << endl;
 	}
 }
 
 int tokenise(string review, map<string, int>& posWords, map<string, int>& negWords, set<string>& stopWords)
 {
+	int score=0;
+	string word;
+	string x = " ";
+	string arrSymbols[] = { "!", "@","#","$","%","^","&","/","'",",","\"",".",")","(","{","}" };
+	set<string>::iterator it;
+	map<string, int>::iterator itr;
 	//tokenise, search in corpus, increase count of words if matched
-	return 0;
+
+	//code for searching corpus
+
+	size_t pos;
+	for (int i = 0; i < 16; i++)
+	{
+		while ((pos = review.find(arrSymbols[i])) != std::string::npos) {
+			review.replace(pos, 1, x);
+		}
+	}
+	//cout << review<<endl;
+	stringstream string1(review);
+	while (getline(string1, word, ' '))
+	{
+		cout<<word<<endl;
+		it = stopWords.find(word);
+		if (it != stopWords.end())
+			continue;
+
+		itr = posWords.find(word);
+		if (itr != posWords.end())
+		{
+			score++;
+			continue;
+		}
+		itr = negWords.find(word);
+		if (itr != negWords.end())
+		{
+			score--;
+			continue;
+		}
+
+	}
+	
+
+
+	return score;
 }
