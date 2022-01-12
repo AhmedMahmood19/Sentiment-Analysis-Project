@@ -39,6 +39,7 @@ int main()
 	//read file and create a negative word map
 	while (!posWordsFile.eof()) {
 		getline(posWordsFile, myText);
+		//initialising count of each word to 0
 		posWords[myText] = 0;
 
 	}
@@ -46,6 +47,8 @@ int main()
 	//read file and create a negative word map
 	while (!negWordsFile.eof()) {
 		getline(negWordsFile, myText);
+
+		//initialising count of each word to 0
 		negWords[myText] = 0;
 
 	}
