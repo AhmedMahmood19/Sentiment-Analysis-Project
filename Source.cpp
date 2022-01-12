@@ -35,7 +35,7 @@ int main()
 	string buffer;
 
 	//open json file for reading, (the file object is reviewFile)
-	ifstream reviewFile("C:\\Users\\Ahmed\\Desktop\\testing stuff\\paranormal.json");
+	ifstream reviewFile("Files\\Used Files\\kindle_store_reviews.json");
 	if (!reviewFile) {
 		cout << "File doesn't exist\n";
 		return 0;
@@ -137,7 +137,7 @@ int main()
 		fillmap(buffer, reviewMap);
 	}
 	reviewFile.close();
-	ofstream outputFile("TEST Output.txt");
+	ofstream outputFile("Sentimental Analysis Output Data.csv");
 
 	//passing pair of each entry from the reviewMap so the reviews can be analysed
 	outputFile << "\"Title\"" << "," << "\"Number of Total Reviews\"" <<"," << "\"Number of Positive Reviews\"" << "," << "\"Number of Negative Reviews\"" << "," << "\"Popular Positive Words(Atmost 10 words)\"" << "," << "\"Popular Negative Words(Atmost 10 words)\"" <<"," <<"\"Star Rating(Out of 5)\"" << endl;
@@ -201,9 +201,6 @@ void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> 
 			negReviewCount++;
 		}
 	}
-	/////////////////////////////////////////////////////////
-	//***************TODO: calculate rating for product
-	
 	//fills the multimaps with entries from the maps
 	for (auto& it : posWords) {
 		topPos.insert({ it.second, it.first });
@@ -214,6 +211,8 @@ void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> 
 	}
 
 	outputFile << "\"" <<reviews.first<< "\"" << "," << reviews.second.size() << "," << posReviewCount << "," << negReviewCount;
+	
+	//Top 10 positive and negative words written into file
 	outputFile << ",[";
 	wordsSelected = 0;
 	for (auto& it : topPos) {
