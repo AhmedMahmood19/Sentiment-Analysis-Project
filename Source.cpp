@@ -186,8 +186,7 @@ void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> 
 	{
 
 		//tokenise function will be called here
-		reviewScore = tokenise("good book but bad story worse", posWords, negWords, stopWords);
-		cout << reviewScore;
+		reviewScore = tokenise(v, posWords, negWords, stopWords);
 		if (reviewScore > 0)
 		{
 			posReviewCount++;
@@ -212,14 +211,14 @@ void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> 
 
 	// Print the multimap
 	for (auto& it : topPos) {
-		//cout << it.second << ' '
-			//<< it.first << endl;
+		cout << it.second << ' '
+			<< it.first << endl;
 	}
 	cout << "----------------------\n\n";
 	// Print the multimap
 	for (auto& it : topNeg) {
-		//cout << it.second << ' '
-			//<< it.first << endl;
+		cout << it.second << ' '
+			<< it.first << endl;
 	}
 }
 
@@ -242,11 +241,9 @@ int tokenise(string review, map<string, int>& posWords, map<string, int>& negWor
 			review.replace(pos, 1, x);
 		}
 	}
-	//cout << review<<endl;
 	stringstream string1(review);
 	while (getline(string1, word, ' '))
 	{
-		cout << word << endl;
 		it = stopWords.find(word);
 		if (it != stopWords.end())
 			continue;
