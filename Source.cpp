@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include <algorithm>
 #include "nlohmann/json.hpp"
 #include <fstream>
 #include <map>
@@ -34,7 +35,7 @@ int main()
 	string buffer;
 
 	//open json file for reading, (the file object is reviewFile)
-	ifstream reviewFile("Files\\Used Files\\v2.json");
+	ifstream reviewFile("Files\\Used Files\\kindle_store_reviews.json");
 	if (!reviewFile) {
 		cout << "File doesn't exist\n";
 		return 0;
@@ -180,7 +181,7 @@ void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> 
 {
 	//Creates multimaps of positive and negative words sorted in descending order of count(key)
 	multimap<int, string, greater<int> > topPos, topNeg;
-	int negReviewCount = 0, posReviewCount = 0, reviewScore=0, totalScore=0;
+	int negReviewCount = 0, posReviewCount = 0, reviewScore=0;
 	//iterating through all the reviews in the list
 	for (auto v : reviews.second)
 	{
@@ -195,7 +196,6 @@ void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> 
 		{
 			negReviewCount++;
 		}
-		totalScore += reviewScore;
 	}
 	//TODO: calculate rating for product
 	//TODO: output analysis into file
@@ -227,7 +227,7 @@ int tokenise(string review, map<string, int>& posWords, map<string, int>& negWor
 	int score = 0;
 	string word;
 	string x = " ";
-	string arrSymbols[] = { "!", "@","#","$","%","^","&","/","'",",","\"",".",")","(","{","}",":",";","|","=","-",">","<","?","[","]","*","+"};
+	char arrSymbols[42] = { '!' , '\"' , '#' , '$' , '%' , '&' , '\'' , '(' , ')' , '*' , '+' , ',' , '-' , '.' , '/' , '0' , '1' , '2' , '3' , '4' , '5' , '6' , '7' , '8' , '9' , ':' , ';' , '<' , '=' , '>' , '?' , '@' , '[' , '\\' , ']' , '^' , '_' , '`' , '{' , '|' , '}' , '~' };
 	set<string>::iterator it;
 	map<string, int>::iterator itr;
 	//tokenise, search in corpus, increase count of words if matched
@@ -235,7 +235,7 @@ int tokenise(string review, map<string, int>& posWords, map<string, int>& negWor
 	//code for searching corpus
 
 	size_t pos;
-	for (int i = 0; i < 28; i++)
+	for (int i = 0; i < 42; i++)
 	{
 		while ((pos = review.find(arrSymbols[i])) != std::string::npos) {
 			review.replace(pos, 1, x);
@@ -244,6 +244,8 @@ int tokenise(string review, map<string, int>& posWords, map<string, int>& negWor
 	stringstream string1(review);
 	while (getline(string1, word, ' '))
 	{
+		transform(word.begin(), word.end(), word.begin(), ::tolower);
+
 		it = stopWords.find(word);
 		if (it != stopWords.end())
 			continue;
@@ -262,8 +264,5 @@ int tokenise(string review, map<string, int>& posWords, map<string, int>& negWor
 		}
 
 	}
-
-
-
 	return score;
 }
