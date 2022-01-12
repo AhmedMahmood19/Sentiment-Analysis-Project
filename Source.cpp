@@ -213,39 +213,39 @@ void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> 
 	outputFile << "\"" <<reviews.first<< "\"" << "," << reviews.second.size() << "," << posReviewCount << "," << negReviewCount;
 	
 	//Top 10 positive and negative words written into file
-	outputFile << ",[";
+	outputFile << ",\"[";
 	wordsSelected = 0;
 	for (auto& it : topPos) {
 		if (it.first <= 0 || wordsSelected >= 10) {
 			break;
 		}
 		if (it == *topPos.begin()) {
-			outputFile << "\"" << it.second << "\"";
+			outputFile << "\'" << it.second << "\'";
 		}
 		else
 		{
-			outputFile << "," << "\"" << it.second << "\"";
+			outputFile << "," << "\'" << it.second << "\'";
 		}
 		wordsSelected++;
 	}
-	outputFile << "],";
+	outputFile << "]\",";
 
-	outputFile << "[";
+	outputFile << "\"[";
 	wordsSelected = 0;
 	for (auto& it : topNeg) {
 		if (it.first <= 0 || wordsSelected >= 10) {
 			break;
 		}
 		if (it == *topNeg.begin()) {
-			outputFile << "\"" << it.second << "\"";
+			outputFile << "\'" << it.second << "\'";
 		}
 		else
 		{
-			outputFile << "," << "\"" << it.second << "\"";
+			outputFile << "," << "\'" << it.second << "\'";
 		}
 		wordsSelected++;
 	}
-	outputFile << "],";
+	outputFile << "]\",";
 	//Star Rating = (No. of Positive reviews / total reviews) * 5
 	starRating = ((float)posReviewCount / reviews.second.size()) * 5;
 	//Rounding to 1DP
