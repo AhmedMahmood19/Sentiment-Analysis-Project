@@ -1,0 +1,4 @@
+"Title","Number of Total Reviews","Number of Positive Reviews","Number of Negative Reviews","Popular Positive Words(Atmost 10 words)","Popular Negative Words(Atmost 10 words)","Star Rating(Out of 5)"
+"Cat of a Different Color (Halle Puma Book 3) - Kindle edition",1,1,0,["good","great","hot"],[],5
+"Dream Machine (Play Doctor Book 1) - Kindle edition",8,7,0,["love","hot","sexy","great","loved","amazing","awesome","enjoyable","entertaining","fast"],["afraid","bothered","fall","fallen","heck","hurt","issues","limited","steals","unusual"],4.3
+"Very Much Alive: True Destiny, Book 1 - Kindle edition",13,12,1,["destiny","good","love","work","enjoyed","enjoy","great","hot","fun","modern"],["wicked","complex","confusing","plot","bad","dark","difficult","funny","hard","mess"],4.6

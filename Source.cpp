@@ -16,7 +16,7 @@ using namespace std;
 
 
 void fillmap(string buff, map<string, list<string>>& mapReference);
-void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> posWords, map<string, int> negWords, set<string> stopWords);
+void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> posWords, map<string, int> negWords, set<string> stopWords, ofstream& outputFile);
 int tokenise(string review, map<string, int>& posWords, map<string, int>& negWords, set<string>& stopWords);
 
 int main()
@@ -35,7 +35,7 @@ int main()
 	string buffer;
 
 	//open json file for reading, (the file object is reviewFile)
-	ifstream reviewFile("Files\\Used Files\\v2.json");
+	ifstream reviewFile("C:\\Users\\Ahmed\\Desktop\\testing stuff\\paranormal.json");
 	if (!reviewFile) {
 		cout << "File doesn't exist\n";
 		return 0;
@@ -137,13 +137,16 @@ int main()
 		fillmap(buffer, reviewMap);
 	}
 	reviewFile.close();
+	ofstream outputFile("TEST Output.txt");
 
 	//passing pair of each entry from the reviewMap so the reviews can be analysed
+	outputFile << "\"Title\"" << "," << "\"Number of Total Reviews\"" <<"," << "\"Number of Positive Reviews\"" << "," << "\"Number of Negative Reviews\"" << "," << "\"Popular Positive Words(Atmost 10 words)\"" << "," << "\"Popular Negative Words(Atmost 10 words)\"" <<"," <<"\"Star Rating(Out of 5)\"" << endl;
 	for (pair<const string, list<string>>& x : reviewMap)
 	{
-		analyseReviews(x, posWords, negWords, stopWords);
+		analyseReviews(x, posWords, negWords, stopWords, outputFile);
+		outputFile << endl;
 	}
-
+	outputFile.close();
 	return 0;
 }
 
@@ -177,11 +180,12 @@ void fillmap(string buff, map<string, list<string>>& mapReference)
 }
 
 
-void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> posWords, map<string, int> negWords, set<string> stopWords)
+void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> posWords, map<string, int> negWords, set<string> stopWords, ofstream &outputFile)
 {
 	//Creates multimaps of positive and negative words sorted in descending order of count(key)
 	multimap<int, string, greater<int> > topPos, topNeg;
-	int negReviewCount = 0, posReviewCount = 0, reviewScore = 0;
+	int negReviewCount = 0, posReviewCount = 0, reviewScore = 0, wordsSelected=0;
+	float starRating = 0;
 	//iterating through all the reviews in the list
 	for (auto v : reviews.second)
 	{
@@ -197,9 +201,9 @@ void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> 
 			negReviewCount++;
 		}
 	}
-	//TODO: calculate rating for product
-	//TODO: output analysis into file
-
+	/////////////////////////////////////////////////////////
+	//***************TODO: calculate rating for product
+	
 	//fills the multimaps with entries from the maps
 	for (auto& it : posWords) {
 		topPos.insert({ it.second, it.first });
@@ -209,17 +213,45 @@ void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> 
 		topNeg.insert({ it.second, it.first });
 	}
 
-	// Print the multimap
+	outputFile << "\"" <<reviews.first<< "\"" << "," << reviews.second.size() << "," << posReviewCount << "," << negReviewCount;
+	outputFile << ",[";
+	wordsSelected = 0;
 	for (auto& it : topPos) {
-		cout << it.second << ' '
-			<< it.first << endl;
+		if (it.first <= 0 || wordsSelected >= 10) {
+			break;
+		}
+		if (it == *topPos.begin()) {
+			outputFile << "\"" << it.second << "\"";
+		}
+		else
+		{
+			outputFile << "," << "\"" << it.second << "\"";
+		}
+		wordsSelected++;
 	}
-	cout << "----------------------\n\n";
-	// Print the multimap
+	outputFile << "],";
+
+	outputFile << "[";
+	wordsSelected = 0;
 	for (auto& it : topNeg) {
-		cout << it.second << ' '
-			<< it.first << endl;
+		if (it.first <= 0 || wordsSelected >= 10) {
+			break;
+		}
+		if (it == *topNeg.begin()) {
+			outputFile << "\"" << it.second << "\"";
+		}
+		else
+		{
+			outputFile << "," << "\"" << it.second << "\"";
+		}
+		wordsSelected++;
 	}
+	outputFile << "],";
+	//Star Rating = (No. of Positive reviews / total reviews) * 5
+	starRating = ((float)posReviewCount / reviews.second.size()) * 5;
+	//Rounding to 1DP
+	starRating = ((float)((int)(starRating * 10))) / 10;
+	outputFile << starRating;
 }
 
 int tokenise(string review, map<string, int>& posWords, map<string, int>& negWords, set<string>& stopWords)
@@ -242,7 +274,7 @@ int tokenise(string review, map<string, int>& posWords, map<string, int>& negWor
 		}
 	}
 	stringstream string1(review);
-	while (getline(string1, word, ' '))
+	while (string1>>word)
 	{
 		transform(word.begin(), word.end(), word.begin(), ::tolower);
 
@@ -254,14 +286,14 @@ int tokenise(string review, map<string, int>& posWords, map<string, int>& negWor
 		if (itr != posWords.end())
 		{
 			score++;
-			itr->second = itr->second++;
+			itr->second++;
 			continue;
 		}
 		itr = negWords.find(word);
 		if (itr != negWords.end())
 		{
 			score--;
-			itr->second = itr->second++;
+			itr->second++;
 			continue;
 		}
 
