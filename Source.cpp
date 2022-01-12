@@ -14,7 +14,7 @@ using namespace std;
 
 void fillmap(string buff, map<string, list<string>>& mapReference);
 void analyseReview(pair<const string, list<string>>& reviews, map<string, int> posWords, map<string, int> negWords, set<string> stopWords);
-int tokenise(string review, map<string, int> &posWords, map<string, int> &negWords, set<string> &stopWords);
+int tokenise(string review, map<string, int>& posWords, map<string, int>& negWords, set<string>& stopWords);
 
 
 int main()
@@ -182,18 +182,19 @@ void fillmap(string buff, map<string, list<string>>& mapReference)
 	}
 }
 
-void analyseReview(pair<const string, list<string>>&reviews, map<string, int> posWords, map<string, int> negWords, set<string> stopWords)
+void analyseReview(pair<const string, list<string>>& reviews, map<string, int> posWords, map<string, int> negWords, set<string> stopWords)
 {
 	//checking the review pairs are passed correctly or not
 	for (auto v : reviews.second)
-			{
-				cout << v << endl;
-				//tokenise function will be called here
-				tokenise(v, posWords, negWords, stopWords);
-			}
+	{
+		cout << v << endl;
+		//tokenise function will be called here
+		int x = tokenise(v, posWords, negWords, stopWords);
+	}
 }
 
-int tokenise(string review, map<string, int> &posWords, map<string, int> &negWords, set<string> &stopWords)
+int tokenise(string review, map<string, int>& posWords, map<string, int>& negWords, set<string>& stopWords)
 {
+	//tokenise, search in corpus, increase count of words if matched
 	return 0;
 }
