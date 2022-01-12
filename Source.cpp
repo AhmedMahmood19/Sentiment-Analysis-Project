@@ -16,7 +16,6 @@ void fillmap(string buff, map<string, list<string>>& mapReference);
 void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> posWords, map<string, int> negWords, set<string> stopWords);
 int tokenise(string review, map<string, int>& posWords, map<string, int>& negWords, set<string>& stopWords);
 
-
 int main()
 {
 	//A map containing all the reviews: key is the review title, value is a list of review texts
@@ -142,18 +141,6 @@ int main()
 		analyseReviews(x, posWords, negWords, stopWords);
 	}
 
-	//printing the map for TESTING
-
-	//for (pair<const string, list<string>>& x : reviewMap)
-	//{
-	//	cout << x.first << endl;
-	//	for (auto v : x.second)
-	//	{
-	//		cout << v << endl;
-	//	}
-	//	cout << endl << " --------------------------------------------------------------------------- " << endl;
-	//}
-	
 	return 0;
 }
 
@@ -186,9 +173,11 @@ void fillmap(string buff, map<string, list<string>>& mapReference)
 	}
 }
 
+
 void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> posWords, map<string, int> negWords, set<string> stopWords)
 {
-	multimap<int, string> topPos, topNeg;
+	//Creates multimaps of positive and negative words sorted in descending order of count(key)
+	multimap<int, string, greater<int> > topPos, topNeg;
 	int negReviewCount = 0, posReviewCount = 0, reviewScore=0, totalScore=0;
 	//iterating through all the reviews in the list
 	for (auto v : reviews.second)
@@ -208,6 +197,8 @@ void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> 
 	}
 	//TODO: calculate rating for product
 	//TODO: output analysis into file
+
+	//fills the multimaps with entries from the maps
 	for (auto& it : posWords) {
 		topPos.insert({ it.second, it.first });
 	}
@@ -215,6 +206,7 @@ void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> 
 	for (auto& it : negWords) {
 		topNeg.insert({ it.second, it.first });
 	}
+
 	// Print the multimap
 	for (auto& it : topPos) {
 		cout << it.second << ' '
