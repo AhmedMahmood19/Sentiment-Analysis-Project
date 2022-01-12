@@ -184,17 +184,17 @@ void analyseReview(pair<const string, list<string>>& reviews, map<string, int> p
 	{
 		//cout << v << endl;
 		//tokenise function will be called here
-		int x = tokenise(v, posWords, negWords, stopWords);
-		cout << x << endl;
+		int totalScore = tokenise(v, posWords, negWords, stopWords);
+		cout << totalScore << endl;
 	}
 }
 
 int tokenise(string review, map<string, int>& posWords, map<string, int>& negWords, set<string>& stopWords)
 {
-	int score=0;
+	int score = 0;
 	string word;
 	string x = " ";
-	string arrSymbols[] = { "!", "@","#","$","%","^","&","/","'",",","\"",".",")","(","{","}" };
+	string arrSymbols[] = { "!", "@","#","$","%","^","&","/","'",",","\"",".",")","(","{","}",":",";","|","=","-",">","<","?","[","]","*","+"};
 	set<string>::iterator it;
 	map<string, int>::iterator itr;
 	//tokenise, search in corpus, increase count of words if matched
@@ -202,7 +202,7 @@ int tokenise(string review, map<string, int>& posWords, map<string, int>& negWor
 	//code for searching corpus
 
 	size_t pos;
-	for (int i = 0; i < 16; i++)
+	for (int i = 0; i < 28; i++)
 	{
 		while ((pos = review.find(arrSymbols[i])) != std::string::npos) {
 			review.replace(pos, 1, x);
@@ -212,7 +212,7 @@ int tokenise(string review, map<string, int>& posWords, map<string, int>& negWor
 	stringstream string1(review);
 	while (getline(string1, word, ' '))
 	{
-		cout<<word<<endl;
+		cout << word << endl;
 		it = stopWords.find(word);
 		if (it != stopWords.end())
 			continue;
@@ -231,7 +231,7 @@ int tokenise(string review, map<string, int>& posWords, map<string, int>& negWor
 		}
 
 	}
-	
+
 
 
 	return score;
