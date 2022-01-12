@@ -1,5 +1,7 @@
 #include <iostream>
 #include <iomanip>
+#include <sstream>
+#include <string>
 #include "nlohmann/json.hpp"
 #include <fstream>
 #include <map>
@@ -32,7 +34,7 @@ int main()
 	string buffer;
 
 	//open json file for reading, (the file object is reviewFile)
-	ifstream reviewFile("Files\\Used Files\\kindle_store_reviews.json");
+	ifstream reviewFile("Files\\Used Files\\v2.json");
 	if (!reviewFile) {
 		cout << "File doesn't exist\n";
 		return 0;
@@ -222,5 +224,46 @@ void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> 
 
 int tokenise(string review, map<string, int>& posWords, map<string, int>& negWords, set<string>& stopWords)
 {
-	return 0;
+	int score = 0;
+	string word;
+	string x = " ";
+	string arrSymbols[] = { "!", "@","#","$","%","^","&","/","'",",","\"",".",")","(","{","}",":",";","|","=","-",">","<","?","[","]","*","+"};
+	set<string>::iterator it;
+	map<string, int>::iterator itr;
+	//tokenise, search in corpus, increase count of words if matched
+
+	//code for searching corpus
+
+	size_t pos;
+	for (int i = 0; i < 28; i++)
+	{
+		while ((pos = review.find(arrSymbols[i])) != std::string::npos) {
+			review.replace(pos, 1, x);
+		}
+	}
+	stringstream string1(review);
+	while (getline(string1, word, ' '))
+	{
+		it = stopWords.find(word);
+		if (it != stopWords.end())
+			continue;
+
+		itr = posWords.find(word);
+		if (itr != posWords.end())
+		{
+			score++;
+			continue;
+		}
+		itr = negWords.find(word);
+		if (itr != negWords.end())
+		{
+			score--;
+			continue;
+		}
+
+	}
+
+
+
+	return score;
 }
