@@ -5,45 +5,31 @@
 #include <map>
 #include <list>
 #include <iterator>
+#include <set>
 
 using json = nlohmann::json;
 using namespace std;
 
+
+
 void fillmap(string buff, map<string, list<string>>& mapReference);
+void analyseReview(pair<const string, list<string>>& reviews, map<string, int> posWords, map<string, int> negWords, set<string> stopWords);
+int tokenise(string review, map<string, int> &posWords, map<string, int> &negWords, set<string> &stopWords);
 
-class Node
-{
-public:
-	string word;
-	int count;
-
-	Node()
-	{
-		word = "";
-		count = 0;
-	}
-
-	Node(string w, int c)
-	{
-		word = w;
-		count = c;
-	}
-};
 
 int main()
 {
 	//A map containing all the reviews: key is the review title, value is a list of review texts (the map object is reviewMap)
 	map<string, list<string>>  reviewMap;
-	map<string, Node> posWords;
-	map<string, Node> negWords;
-	map<string, Node> stopWords;
-
-	map<string, Node>::iterator it;
+	map<string, int> posWords;
+	map<string, int> negWords;
+	set<string> stopWords;
+	map<string, int>::iterator it;
 
 
 	string myText;
 	//open json file for reading, (the file object is reviewFile)
-	ifstream reviewFile("Files\\Used Files\\kindle_store_reviews.json");
+	ifstream reviewFile("Files\\Used Files\\v2.json");
 	//opening other files
 	ifstream posWordsFile("Files\\Used Files\\positive-words-clean.txt");
 	ifstream negWordsFile("Files\\Used Files\\negative-words-clean.txt");
@@ -53,42 +39,36 @@ int main()
 	//read file and create a negative word map
 	while (!posWordsFile.eof()) {
 		getline(posWordsFile, myText);
-		Node node;
-		node.word = myText;
-		posWords[myText] = node;
+		posWords[myText] = 0;
 
 	}
 
 	//read file and create a negative word map
 	while (!negWordsFile.eof()) {
 		getline(negWordsFile, myText);
-		Node node;
-		node.word = myText;
-		negWords[myText] = node;
+		negWords[myText] = 0;
 
 	}
-
+	//read file and create a map containing stopwords
 	while (!stopWordsFile.eof()) {
 		getline(stopWordsFile, myText);
-		Node node;
-		node.word = myText;
-		stopWords[myText] = node;
+		stopWords.insert(myText);
 
 	}
 
-	it = stopWords.find("the");
+	//code for searching corpus
+	/*it = stopWords.find("the");
 	if (it == stopWords.end())
 		cout << "Not found";
 	else
-		cout << it->second.word;
-	return 0;
+		cout << it->second.word;*/
 
 
 
 
-	//-------------------------------------------------------
-	
-	//buffer to store string that is read from the file
+		//-------------------------------------------------------
+
+		//buffer to store string that is read from the file
 	string buffer;
 	//read the first char '[' and discard it
 	reviewFile.ignore();
@@ -107,18 +87,18 @@ int main()
 
 			//temp won't store '}'
 			getline(reviewFile, temp, '}');
-			
+
 			//read the 2 chars after '}' to check for eof(if a=']' and b=-1)
 			char a = reviewFile.get();
 			char b = reviewFile.get();
-			
+
 			//if EOF is detected then append temp to the buffer for the last json object and stop reading
 			if (reviewFile.eof())
 			{
 				buffer += temp;
 				break;
 			}
-			
+
 			//if the 2 chars after '}' were ',' and '{' 
 				//it means the current json object has been completely read
 				//so append the temp to buffer and stop reading the file for now
@@ -134,16 +114,29 @@ int main()
 		}
 		//insert a '{' at the start of the string since a json object starts with {
 		buffer.insert(buffer.begin(), '{');
-		
+
 		//json object ends with }
 		buffer += "}";
 
 		//pass the raw string and map reference to fillmap that will enter all the records into a map
 		fillmap(buffer, reviewMap);
+
+
+		//passing pair of each entry from the reviewMap
+		for (pair<const string, list<string>>& x : reviewMap)
+		{
+
+
+			analyseReview(x, posWords, negWords, stopWords);
+
+
+			cout << endl << " --------------------------------------------------------------------------- " << endl;
+
+		}
 	}
 
 	//printing the map for TESTING
-	
+
 	//for (pair<const string, list<string>>& x : reviewMap)
 	//{
 	//	cout << x.first << endl;
@@ -184,4 +177,20 @@ void fillmap(string buff, map<string, list<string>>& mapReference)
 	{
 		mapReference[temp].push_back(JsonObj["reviewText"]);
 	}
+}
+
+void analyseReview(pair<const string, list<string>>&reviews, map<string, int> posWords, map<string, int> negWords, set<string> stopWords)
+{
+	//checking the review pairs are passed correctly or not
+	for (auto v : reviews.second)
+			{
+				cout << v << endl;
+				//tokenise function will be called here
+				tokenise(v, posWords, negWords, stopWords);
+			}
+}
+
+int tokenise(string review, map<string, int> &posWords, map<string, int> &negWords, set<string> &stopWords)
+{
+	return 0;
 }
