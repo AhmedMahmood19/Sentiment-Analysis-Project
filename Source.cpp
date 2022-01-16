@@ -35,7 +35,7 @@ int main()
 	string buffer;
 
 	//open json file for reading, (the file object is reviewFile)
-	ifstream reviewFile("Files\\Used Files\\kindle_store_reviews.json");
+	ifstream reviewFile("Files\\Used Files\\clean_Kindle_Data.json");
 	if (!reviewFile) {
 		cout << "File doesn't exist\n";
 		return 0;
@@ -132,9 +132,9 @@ int main()
 
 		//json object ends with }
 		buffer += "}";
-
 		//pass the raw string and map reference to fillmap that will enter all the records into a map
 		fillmap(buffer, reviewMap);
+		
 	}
 	reviewFile.close();
 	ofstream outputFile("Sentimental Analysis Output Data.csv");
@@ -154,7 +154,6 @@ void fillmap(string buff, map<string, list<string>>& mapReference)
 {
 	//the string read from the open file is converted into a json object
 	json JsonObj = json::parse(buff);
-
 	//if the object's title is blank don't add it to the map
 	if (JsonObj["title"] == "")
 	{
