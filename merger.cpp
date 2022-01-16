@@ -20,8 +20,8 @@ int main()
 {
 	//open files
 
-	ifstream reviewFile("Files/review.json");
-	ifstream metaFile("Files/meta.json");
+	ifstream reviewFile("Files/Original Files/Kindle Datasets/Kindle_Store_5.json/Kindle_Store_5.json");
+	ifstream metaFile("Files/Original Files/Kindle Datasets/meta_Kindle_Store.json/meta_Kindle_Store.json");
 	ofstream finalJson("clean_Kindle_Data.json");
 
 

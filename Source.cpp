@@ -13,8 +13,6 @@
 using json = nlohmann::json;
 using namespace std;
 
-
-
 void fillmap(string buff, map<string, list<string>>& mapReference);
 void analyseReviews(pair<const string, list<string>>& reviews, map<string, int> posWords, map<string, int> negWords, set<string> stopWords, ofstream& outputFile);
 int tokenise(string review, map<string, int>& posWords, map<string, int>& negWords, set<string>& stopWords);
@@ -35,7 +33,7 @@ int main()
 	string buffer;
 
 	//open json file for reading, (the file object is reviewFile)
-	ifstream reviewFile("Files\\Used Files\\clean_Kindle_Data.json");
+	ifstream reviewFile("Files\\Used Files\\kindle_store_reviews.json");
 	if (!reviewFile) {
 		cout << "File doesn't exist\n";
 		return 0;
